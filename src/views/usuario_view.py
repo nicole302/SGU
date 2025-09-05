@@ -45,7 +45,27 @@ class UsuarioList(Resource):
             return make_response(jsonify({'message':str(e)}), 400)
 
 
-
-
-
 api.add_resource(UsuarioList, '/usuario')            
+
+class UsuarioResource(Resource):
+    def get(self, id_usuario):
+        usuario_encontrado = usuario_services.listar_usuario_id(id_usuario)
+        if not usuario_encontrado:
+            return make_response(jsonify({'message': 'Usuário não encontrado'}))
+        
+        schema = usuario_schema.UsuarioSchema()
+        return make_response(jsonify(schema.dump(usuario_encontrado)), 200)
+    
+    def put(self, id_usuario):
+        ...
+    def delete(self, id_usuario):
+        usuario_encontrado = usuario_services.listar_usuario_id(id_usuario)
+        if not usuario_encontrado:
+            return make_response(jsonify({'message': 'Usuário não encontrado'}), 404)
+        try:
+            usuario_services.excluir_usuario(id_usuario)
+            return make_response(jsonify({'message': 'Usuário excluído com sucesso!'}), 200)
+        except Exception as e:
+            return make_response(jsonify({'message':str(e)}),400)
+
+api.add_resource(UsuarioResource, 'usuario/<int:id_usuario') # /usuario/1                    
