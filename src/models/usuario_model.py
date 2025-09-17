@@ -1,7 +1,7 @@
 from src import db
 from passlib.hash import pbkdf2_sha256 as sha256
 
-class Usuario(db.Model):
+class UsuarioModel(db.Model):
     __tablename__ = 'tb_usuario'
 
     id = db.Column(db.Integer, primary_key=True, autoincrement=True)

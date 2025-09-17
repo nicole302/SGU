@@ -4,7 +4,7 @@ from marshmallow import fields
 
 class UsuarioSchema(ma.SQLAlchemyAutoSchema):
     class Meta:
-        model = usuario_model.Usuario
+        model = usuario_model.UsuarioModel
 
         fields = ('id', 'nome', 'email', 'telefone', 'senha')
 
