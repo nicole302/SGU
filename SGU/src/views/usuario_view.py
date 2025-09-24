@@ -1,22 +1,24 @@
 from flask_restful import Resource
 from marshmallow import ValidationError
 from src.schemas import usuario_schema
+from src.entities import usuario
 from flask import request, jsonify, make_response
 from src.services import usuario_services
 from src import api
-from src.models.usuario_model import Usuario
+
 
 # POST-GET-PUT-DELETE
 # Lidar com todos os usuarios
 class UsuarioList(Resource):
     def get(self):
         usuarios = usuario_services.listar_usuario()
+        schema = usuario_schema.UsuarioSchema(many=True)
 
         if not usuarios:
             return make_response(jsonify({'message':'Não existe usuarios!'}))
 
         schema = usuario_schema.UsuarioSchema(many=True)
-        return make_response(jsonify(usuario_schema.dump(usuarios)), 200)
+        return make_response(jsonify(schema.dump(usuarios)), 200)
 
     def post(self):
         schema = usuario_schema.UsuarioSchema()
@@ -31,7 +33,7 @@ class UsuarioList(Resource):
         
         try:
             # criação do novo usuario no banco
-            novo_usurio = Usuario(
+            novo_usurio = usuario.Usuario(
                 nome=dados['nome'],
                 email=dados['email'],
                 telefone=dados['telefone'],
@@ -68,4 +70,4 @@ class UsuarioResource(Resource):
         except Exception as e:
             return make_response(jsonify({'message':str(e)}),400)
 
-api.add_resource(UsuarioResource, 'usuario/<int:id_usuario') # /usuario/1                    
+api.add_resource(UsuarioResource, '/usuario/<int:id_usuario>') # /usuario/1                    
